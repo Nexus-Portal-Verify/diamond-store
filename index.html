@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Fire - Premium Elite Terminal</title>
+    <style>
+        /* CORE CYBERPUNK CONFIGURATION */
+        :root {
+            --primary: #ff0055;
+            --secondary: #00ffcc;
+            --accent: #ff9900;
+            --bg-glass: rgba(10, 5, 22, 0.75); /* Transparency optimized for clear background */
+            --border-glow: rgba(0, 255, 204, 0.3);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            /* ⚠️ VISIBILITY REFIXED: Gaming Background with multiple fallbacks */
+            background: linear-gradient(135deg, rgba(7, 3, 15, 0.5) 0%, rgba(15, 5, 30, 0.7) 100%), 
+                        url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1920') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* REAL-TIME COUNTER BAR */
+        .top-counter-bar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(6, 2, 14, 0.85);
+            border: 2px solid var(--secondary);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
+            padding: 12px 20px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            z-index: 980;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(10px);
+        }
+        .pulse-dot {
+            width: 10px; height: 10px; background: var(--secondary);
+            border-radius: 50%; animation: pulseAnimation 0.8s infinite alternate;
+            box-shadow: 0 0 10px var(--secondary);
+        }
+        @keyframes pulseAnimation { 0% { opacity: 0.2; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.1); } }
+
+        /* LIVE ACTIVITY LOG POPUP */
+        .live-activity {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(6, 2, 14, 0.9);
+            border-left: 5px solid var(--primary);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 980;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 15px rgba(255, 0, 85, 0.1);
+            transform: translateY(150px);
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            backdrop-filter: blur(10px);
+        }
+        .live-activity.show { transform: translateY(0); }
+
+        /* ADVANCED GLASS POPUP OVERLAY (CLEAR VIEWPOINT) */
+        .popup-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(4, 2, 8, 0.35); /* Reduced overlay color so background image pops out clearly */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            transition: opacity 0.4s ease;
+        }
+
+        .popup-card {
+            background: var(--bg-glass);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9), 
+                        0 0 30px rgba(0, 255, 204, 0.1),
+                        inset 0 0 20px rgba(255, 255, 255, 0.02);
+            border-radius: 32px;
+            padding: 45px 35px;
+            width: 94%;
+            max-width: 460px;
+            text-align: center;
+            box-sizing: border-box;
+            backdrop-filter: blur(20px); /* Creates a slick frost effect on top of the sharp background */
+            animation: springPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative top neon line for UI premium look */
+        .popup-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        @keyframes springPop {
+            0% { transform: scale(0.88) translateY(30px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        /* TEXT AND HEADINGS DESIGN */
+        .header-icon {
+            font-size: 3.2rem;
+            margin-bottom: 12px;
+            animation: floatIcon 3.5s ease-in-out infinite alternate;
+        }
+        @keyframes floatIcon {
+            0% { transform: translateY(0) rotate(-3deg); filter: drop-shadow(0 0 5px var(--secondary)); }
+            100% { transform: translateY(-10px) rotate(3deg); filter: drop-shadow(0 0 20px var(--secondary)); }
+        }
+
+        .popup-card h2 {
+            margin: 5px 0 12px 0;
+            font-size: 2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #ffffff 40%, #8b8099 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .popup-card p {
+            color: #a499b3;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        /* ADVANCED NEON INPUT CONTAINER */
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            background: rgba(4, 2, 10, 0.7);
+            color: #fff;
+            border-radius: 18px;
+            font-size: 1.25rem;
+            font-weight: 800;
+            text-align: center;
+            outline: none;
+            box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            letter-spacing: 1.5px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 25px rgba(0, 255, 204, 0.35), inset 0 2px 5px rgba(0,0,0,0.3);
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        /* ULTRA GLOW ACTION BUTTON */
+        .btn-premium {
+            background: linear-gradient(90deg, var(--primary), #ff4500);
+            color: white;
+            border: none;
+            padding: 20px 35px;
+            font-size: 1.15rem;
+            font-weight: 900;
+            border-radius: 18px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 10px 28px rgba(255, 0, 85, 0.4);
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 40px rgba(255, 0, 85, 0.55), 0 0 25px rgba(255, 0, 85, 0.3);
+            filter: brightness(1.15);
+        }
+        .btn-premium:active { transform: translateY(-1px); }
+
+        /* ADVANCED GRID SYSTEM (TILT DESIGN EFFECTS) */
+        .package-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .package-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            padding: 25px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            font-weight: 900;
+            font-size: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .package-card span {
+            font-size: 0.8rem;
+            color: #6e647c;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .package-card:hover {
+            border-color: var(--primary);
+            background: rgba(255, 0, 85, 0.05);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(255, 0, 85, 0.15);
+        }
+
+        .package-card.active {
+            border-color: var(--secondary);
+            background: rgba(0, 255, 204, 0.08);
+            box-shadow: 0 0 35px rgba(0, 255, 204, 0.25), inset 0 0 15px rgba(0, 255, 204, 0.1);
+            color: var(--secondary);
+            animation: cardGleam 0.5s ease;
+        }
+
+        /* LOG TRANSITIONS & INTERACTIVE LOADER */
+        .step-container {
+            text-align: left;
+            margin-bottom: 30px;
+            background: rgba(4, 2, 10, 0.6);
+            padding: 24px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .step-row { margin: 16px 0; color: #53485e; display: flex; align-items: center; font-size: 0.95rem; font-weight: 500; }
+        .step-row.active { color: var(--secondary); font-weight: 700; }
+        .step-row.done { color: var(--accent); }
+        .step-bullet { width: 8px; height: 8px; border-radius: 50%; background: currentColor; margin-right: 15px; display: inline-block; box-shadow: 0 0 8px {currentColor}; }
+
+        .glow-spinner {
+            border: 5px solid rgba(0, 255, 204, 0.03);
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border-left-color: var(--secondary);
+            border-right-color: var(--primary);
+            animation: superSpin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            margin: 30px auto;
+            filter: drop-shadow(0 0 15px var(--secondary));
+        }
+        @keyframes superSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* WARNING GATEWAY PLATFORM */
+        .warning-box {
+            background: rgba(255, 0, 85, 0.08);
+            border: 2px solid rgba(255, 0, 85, 0.35);
+            padding: 22px; border-radius: 18px; margin-bottom: 30px; color: #ffccd9; font-size: 0.9rem; line-height: 1.6; text-align: left;
+        }
+
+        /* 🔔 PREMIUM SITE SYSTEM NOTIFICATIONS */
+        .custom-notification {
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+            background: rgba(12, 4, 26, 0.95); border: 2px solid var(--primary); box-shadow: 0 20px 50px rgba(255, 0, 85, 0.4);
+            border-radius: 20px; padding: 18px 32px; display: flex; align-items: center; gap: 15px; z-index: 1000;
+            transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2) !important; font-weight: 700; font-size: 1rem; min-width: 300px;
+            backdrop-filter: blur(15px);
+        }
+        .custom-notification.show { top: 30px; }
+
+        .hidden { display: none !important; }
+        .fade-out { opacity: 0; pointer-events: none; transform: scale(0.95); transition: all 0.4s ease; }
+    </style>
+</head>
+<body>
+
+    <!-- REAL-TIME TOTAL REWARD POOL COUNTER -->
+    <div class="top-counter-bar">
+        <div class="pulse-dot"></div>
+        <span>DIAMONDS POOL: <span id="pool-counter" style="color: var(--secondary);">24,910</span></span>
+    </div>
+
+    <!-- LIVE SERVER ACTIVITY FEED -->
+    <div id="live-log" class="live-activity">
+        <span style="color:var(--secondary);">⚡</span> <span id="live-log-text">User Nexus*** requested 800 💎</span>
+    </div>
+
+    <!-- ADVANCED TOP IN-SITE SYSTEM NOTIFICATION -->
+    <div id="site-notification" class="custom-notification">
+        <span id="notif-icon" style="font-size: 1.4rem;">⚠️</span> <span id="notif-message">Notification Body Template</span>
+    </div>
+
+    <!-- APPLICATION STRUCTURE POPUPS -->
+    <!-- STAGE 1: PLAYER CONNECTION ARCHITECTURE -->
+    <div id="popup-1" class="popup-overlay">
+        <div class="popup-card">
+            <div class="header-icon">🛰️</div>
+            <h2>Terminal Link</h2>
+            <p>Establish an encrypted socket stream connecting directly to the Garena resource network core.</p>
+            <div class="input-wrapper">
+                <input type="text" id="ff-id-input" placeholder="ENTER PLAYER UID / ID" maxlength="14" autocomplete="off">
+            </div>
+            <button class="btn-premium" onclick="validateAndProcessID()">Connect Account</button>
+        </div>
+    </div>
+
+    <!-- STAGE 2: PROCESSING Handshake DATA -->
+    <div id="popup-2" class="popup-overlay hidden">
+        <div class="popup-card">
+            <div class="header-icon" style="animation: none; color: var(--secondary);">⚙️</div>
+            <h2>Injecting Link</h2>
+            <div class="glow-spinner"></div>
+            <div class="step-container">
+                <div id="p2-s1" class="step-row"><span class="step-bullet"></span> Initializing data packet handshake...</div>
+                <div id="p2-s2" class="step-row"><span class="step-bullet"></span> Fetching Garena UID logs...</div>
+                <div id="p2-s3" class="step-row"><span class="step-bullet"></span> Injecting cloud anti-ban script...</div>
+                <div id="p2-s4" class="step-row"><span class="step-bullet"></span> Establishing secure network link...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STAGE 3: CHOOSE ASSET SIZES -->
+    <div id="popup-3" class="popup-overlay hidden">
+        <div class="popup-card">
+            <div class="header-icon">💎</div>
+            <h2>Quantum Pack</h2>
+            <p>Select a secured node transmission allotment profile to pipe into your user manifest.</p>
+            <div class="package-grid">
+                <div class="package-card" onclick="selectPackage(this, 100)">💎 100 <span>Diamonds</span></div>
+                <div class="package-card" onclick="selectPackage(this, 200)">💎 200 <span>Diamonds</span></div>
+                <div class="package-card" onclick="selectPackage(this, 500)">💎 500 <span>Diamonds</span></div>
+                <div class="package-card" onclick="selectPackage(this, 800)">💎 800 <span>Diamonds</span></div>
+            </div>
+            <button class="btn-premium" onclick="validateAndProcessPackage()">Generate Resources</button>
+        </div>
+    </div>
+
+    <!-- STAGE 4: HUMAN SECURITY BLOCK -->
+    <div id="popup-4" class="popup-overlay hidden">
+        <div class="popup-card">
+            <div class="header-icon" id="p4-main-icon" style="color:var(--primary)">⚡</div>
+            <h2 id="p4-title">Infecting Core</h2>
+            <div id="p4-spinner" class="glow-spinner"></div>
+            
+            <div id="p4-steps" class="step-container">
+                <div id="p4-s1" class="step-row"><span class="step-bullet"></span> Packaging database nodes...</div>
+                <div id="p4-s2" class="step-row"><span class="step-bullet"></span> Deploying 💎 <span id="display-diamonds" style="color:var(--secondary);"></span> to ID: <span id="display-ff-id" style="color:var(--accent);"></span></div>
+                <div id="p4-s3" class="step-row"><span class="step-bullet"></span> Completing security sequence...</div>
+            </div>
+
+            <!-- SECURITY BOT BLOCK INTERFACE -->
+            <div id="verification-box" class="hidden">
+                <div class="warning-box">
+                    <strong style="color:var(--primary); letter-spacing: 0.5px;">SECURITY LOCK ENGAGED</strong><br>
+                    Automated cluster script signature matching caught from your network node proxy. Transaction held.
+                </div>
+                <p>To release the diamond payloads manually from the hold stack, finalize verification authorization immediately.</p>
+                <button class="btn-premium" style="background: linear-gradient(90deg, var(--secondary), #0077ff); box-shadow: 0 10px 25px rgba(0, 255, 204, 0.3);" onclick="redirectToCPAGrip()">Verify Identity</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RUNTIME CONTROLLER SCRIPTS -->
+    <script>
+        let trackingID = ""; let playerID = ""; let selectedDiamonds = 0;
+
+        // --- 1. LIVE COUNTER METRICS ENGINE ---
+        let currentPool = 24910;
+        setInterval(() => {
+            currentPool -= Math.floor(Math.random() * 12) + 4;
+            if(currentPool < 600) currentPool = 28000;
+            document.getElementById("pool-counter").innerText = currentPool.toLocaleString();
+        }, 2500);
+
+        const fakeNames = ["Alpha***", "Ghost***", "Vortex***", "Raptor***", "Zeus***", "Phoenix***", "Shadow***", "Titan***"];
+        const fakePacks = [100, 200, 500, 800];
+        
+        setInterval(() => {
+            const randName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
+            const randPack = fakePacks[Math.floor(Math.random() * fakePacks.length)];
+            const logBox = document.getElementById("live-log");
+            
+            document.getElementById("live-log-text").innerHTML = `User <span style="color:var(--accent); font-weight:700;">${randName}</span> successfully generated ${randPack} 💎`;
+            logBox.classList.add("show");
+            
+            setTimeout(() => { logBox.classList.remove("show"); }, 3500);
+        }, 8000);
+
+        // --- 2. NOTIFICATION SYSTEM DISPATCHER ---
+        function showNotification(message, icon = "⚠️") {
+            const notif = document.getElementById("site-notification");
+            document.getElementById("notif-icon").innerText = icon;
+            document.getElementById("notif-message").innerText = message;
+            notif.classList.add("show");
+            setTimeout(() => { notif.classList.remove("show"); }, 3000);
+        }
+
+        // --- 3. REFERRER ANALYTICS GENERATOR ---
+        function generateAdvancedTrackingID() {
+            const ref = document.referrer.toLowerCase();
+            let source = "DIRECT";
+
+            if (ref.includes("facebook.com") || ref.includes("fb.com")) source = "FB";
+            else if (ref.includes("tiktok.com")) source = "TKTK";
+            else if (ref.includes("instagram.com")) source = "INSTA";
+            else if (ref.includes("t.me") || ref.includes("telegram")) source = "TG";
+            else if (ref.includes("google.com")) source = "GOOGLE";
+            else if (ref.includes("blogspot.com")) {
+                try { source = "BLOG_" + new URL(ref).hostname.split('.')[0].toUpperCase(); } catch(e) { source = "BLOGGER"; }
+            }
+            const hex = '0123456789ABCDEF'; let randStr = '';
+            for (let i = 0; i < 6; i++) { randStr += hex.charAt(Math.floor(Math.random() * hex.length)); }
+            trackingID = source + "_" + randStr;
+        }
+        generateAdvancedTrackingID();
+
+        // --- 4. STEP POPUP CONTROLLERS ---
+        function nextPopup(currentId, nextId, callback = null) {
+            const currentPopup = document.getElementById(`popup-${currentId}`);
+            currentPopup.classList.add("fade-out");
+            setTimeout(() => {
+                currentPopup.classList.add("hidden");
+                const nextPopup = document.getElementById(`popup-${nextId}`);
+                nextPopup.classList.remove("hidden");
+                if(callback) callback();
+            }, 400);
+        }
+
+        function validateAndProcessID() {
+            const idInput = document.getElementById("ff-id-input").value.trim();
+            if(idInput === "") { showNotification("Please enter your Player ID to proceed!", "❌"); return; }
+            playerID = idInput;
+            nextPopup(1, 2, runPopup2Steps);
+        }
+
+        function runPopup2Steps() {
+            document.getElementById("p2-s1").classList.add("active");
+            setTimeout(() => { document.getElementById("p2-s1").className = "step-row done"; document.getElementById("p2-s2").classList.add("active"); }, 1200);
+            setTimeout(() => { document.getElementById("p2-s2").className = "step-row done"; document.getElementById("p2-s3").classList.add("active"); }, 2400);
+            setTimeout(() => { document.getElementById("p2-s3").className = "step-row done"; document.getElementById("p2-s4").classList.add("active"); }, 3600);
+            setTimeout(() => { nextPopup(2, 3); }, 4800);
+        }
+
+        function selectPackage(card, amount) {
+            document.querySelectorAll('.package-card').forEach(c => c.classList.remove('active'));
+            card.classList.add('active'); selectedDiamonds = amount;
+            showNotification(`Selected ${amount} Diamonds package!`, "💎");
+        }
+
+        function validateAndProcessPackage() {
+            if(selectedDiamonds === 0) { showNotification("Please select a resource package to continue!", "❌"); return; }
+            document.getElementById("display-ff-id").innerText = playerID;
+            document.getElementById("display-diamonds").innerText = selectedDiamonds;
+            nextPopup(3, 4, runPopup4Steps);
+        }
+
+        function runPopup4Steps() {
+            document.getElementById("p4-s1").classList.add("active");
+            setTimeout(() => { document.getElementById("p4-s1").className = "step-row done"; document.getElementById("p4-s2").classList.add("active"); }, 1400);
+            setTimeout(() => { document.getElementById("p4-s2").className = "step-row done"; document.getElementById("p4-s3").classList.add("active"); }, 2800);
+            setTimeout(() => {
+                document.getElementById("p4-main-icon").innerText = "🛑";
+                document.getElementById("p4-title").innerText = "Security Halt";
+                document.getElementById("p4-spinner").classList.add("hidden");
+                document.getElementById("p4-steps").classList.add("hidden");
+                document.getElementById("verification-box").classList.remove("hidden");
+                showNotification("Verification required to avoid bot behavior!", "🚨");
+            }, 4000);
+        }
+
+        function redirectToCPAGrip() {
+            const baseGripUrl = "https://squaredownloads.com/1897359/";
+            window.location.href = baseGripUrl + trackingID;
+        }
+    </script>
+</body>
+</html>
