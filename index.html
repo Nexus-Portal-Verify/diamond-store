@@ -264,7 +264,7 @@
         .step-row { margin: 16px 0; color: #53485e; display: flex; align-items: center; font-size: 0.95rem; font-weight: 500; }
         .step-row.active { color: var(--secondary); font-weight: 700; }
         .step-row.done { color: var(--accent); }
-        .step-bullet { width: 8px; height: 8px; border-radius: 50%; background: currentColor; margin-right: 15px; display: inline-block; box-shadow: 0 0 8px {currentColor}; }
+        .step-bullet { width: 8px; height: 8px; border-radius: 50%; background: currentColor; margin-right: 15px; display: inline-block; box-shadow: 0 0 8px currentColor; }
 
         .glow-spinner {
             border: 5px solid rgba(0, 255, 204, 0.03);
@@ -301,24 +301,19 @@
 </head>
 <body>
 
-    <!-- REAL-TIME TOTAL REWARD POOL COUNTER -->
     <div class="top-counter-bar">
         <div class="pulse-dot"></div>
         <span>DIAMONDS POOL: <span id="pool-counter" style="color: var(--secondary);">24,910</span></span>
     </div>
 
-    <!-- LIVE SERVER ACTIVITY FEED -->
     <div id="live-log" class="live-activity">
         <span style="color:var(--secondary);">⚡</span> <span id="live-log-text">User Nexus*** requested 800 💎</span>
     </div>
 
-    <!-- ADVANCED TOP IN-SITE SYSTEM NOTIFICATION -->
     <div id="site-notification" class="custom-notification">
         <span id="notif-icon" style="font-size: 1.4rem;">⚠️</span> <span id="notif-message">Notification Body Template</span>
     </div>
 
-    <!-- APPLICATION STRUCTURE POPUPS -->
-    <!-- STAGE 1: PLAYER CONNECTION ARCHITECTURE -->
     <div id="popup-1" class="popup-overlay">
         <div class="popup-card">
             <div class="header-icon">🛰️</div>
@@ -331,7 +326,6 @@
         </div>
     </div>
 
-    <!-- STAGE 2: PROCESSING Handshake DATA -->
     <div id="popup-2" class="popup-overlay hidden">
         <div class="popup-card">
             <div class="header-icon" style="animation: none; color: var(--secondary);">⚙️</div>
@@ -346,7 +340,6 @@
         </div>
     </div>
 
-    <!-- STAGE 3: CHOOSE ASSET SIZES -->
     <div id="popup-3" class="popup-overlay hidden">
         <div class="popup-card">
             <div class="header-icon">💎</div>
@@ -362,7 +355,6 @@
         </div>
     </div>
 
-    <!-- STAGE 4: HUMAN SECURITY BLOCK -->
     <div id="popup-4" class="popup-overlay hidden">
         <div class="popup-card">
             <div class="header-icon" id="p4-main-icon" style="color:var(--primary)">⚡</div>
@@ -375,7 +367,6 @@
                 <div id="p4-s3" class="step-row"><span class="step-bullet"></span> Completing security sequence...</div>
             </div>
 
-            <!-- SECURITY BOT BLOCK INTERFACE -->
             <div id="verification-box" class="hidden">
                 <div class="warning-box">
                     <strong style="color:var(--primary); letter-spacing: 0.5px;">SECURITY LOCK ENGAGED</strong><br>
@@ -387,7 +378,6 @@
         </div>
     </div>
 
-    <!-- RUNTIME CONTROLLER SCRIPTS -->
     <script>
         let trackingID = ""; let playerID = ""; let selectedDiamonds = 0;
 
@@ -422,19 +412,30 @@
             setTimeout(() => { notif.classList.remove("show"); }, 3000);
         }
 
-        // --- 3. REFERRER ANALYTICS GENERATOR ---
+        // --- 3. UNIVERSAL SMART TRACKING ENGINE (100% ACCURATE & NO EXCLUSIONS) ---
         function generateAdvancedTrackingID() {
-            const ref = document.referrer.toLowerCase();
-            let source = "DIRECT";
+            // URL එක අග තියෙන ?src= කෑල්ල කියවනවා (e.g. ?src=googlesite)
+            const urlParams = new URLSearchParams(window.location.search);
+            let source = urlParams.get('src');
 
-            if (ref.includes("facebook.com") || ref.includes("fb.com")) source = "FB";
-            else if (ref.includes("tiktok.com")) source = "TKTK";
-            else if (ref.includes("instagram.com")) source = "INSTA";
-            else if (ref.includes("t.me") || ref.includes("telegram")) source = "TG";
-            else if (ref.includes("google.com")) source = "GOOGLE";
-            else if (ref.includes("blogspot.com")) {
-                try { source = "BLOG_" + new URL(ref).hostname.split('.')[0].toUpperCase(); } catch(e) { source = "BLOGGER"; }
+            // ලින්ක් එක අග මුකුත්ම නැත්නම් විතරක් Referrer එකෙන් කියවන්න උත්සාහ කරනවා
+            if (!source) {
+                const ref = document.referrer.toLowerCase();
+                if (ref.includes("facebook.com") || ref.includes("fb.com")) source = "FB";
+                else if (ref.includes("tiktok.com")) source = "TKTK";
+                else if (ref.includes("instagram.com")) source = "INSTA";
+                else if (ref.includes("t.me") || ref.includes("telegram")) source = "TG";
+                else if (ref.includes("google.com")) source = "GOOGLE";
+                else if (ref.includes("blogspot.com")) {
+                    try { source = "BLOG_" + new URL(ref).hostname.split('.')[0].toUpperCase(); } catch(e) { source = "BLOGGER"; }
+                } else {
+                    source = "DIRECT"; // හැම තැනින්ම හැංගුවොත් විතරක් DIRECT වෙයි
+                }
+            } else {
+                source = source.toUpperCase(); // Parameter එකෙන් ආපු නම Capital කරගන්නවා
             }
+
+            // Tracking ID එක Unique කරන්න අහඹු අකුරු 6ක් එකතු කරනවා
             const hex = '0123456789ABCDEF'; let randStr = '';
             for (let i = 0; i < 6; i++) { randStr += hex.charAt(Math.floor(Math.random() * hex.length)); }
             trackingID = source + "_" + randStr;
